@@ -1,0 +1,37 @@
+SALA DE COLORES (PHP, sin JavaScript)
+=====================================
+
+ARCHIVOS
+  control.php   Panel con botones de colores (ábrelo desde móvil u ordenador)
+  pantalla.php  Lo que abre cada proyector (?p=1, ?p=2, ?p=3)
+  estado.json   Guarda el color actual de cada pantalla
+  Dockerfile    Solo hace falta si lo despliegas en Render (opcional)
+
+OPCION A: servidor local (Raspberry Pi o VM con Apache + PHP)
+  1. Copia control.php, pantalla.php y estado.json a la carpeta web,
+     normalmente /var/www/html/  (o la carpeta de tu virtual host).
+  2. Da permisos de escritura sobre la carpeta y el JSON:
+       sudo chown -R www-data:www-data /var/www/html
+       sudo chmod 664 /var/www/html/estado.json
+  3. En cada proyector abre:
+       http://IP-DEL-SERVIDOR/pantalla.php?p=1
+       http://IP-DEL-SERVIDOR/pantalla.php?p=2
+       http://IP-DEL-SERVIDOR/pantalla.php?p=3
+  4. Desde cualquier dispositivo de la red abre:
+       http://IP-DEL-SERVIDOR/control.php
+
+OPCION B: hosting con PHP (InfinityFree, Hostinger...)
+  Sube control.php, pantalla.php y estado.json a la carpeta pública
+  (htdocs o public_html). No subas el Dockerfile.
+
+OPCION C: GitHub + Render
+  1. Sube TODOS los archivos a un repositorio de GitHub (en la raíz).
+  2. En Render: New > Web Service > elige el repositorio > Environment: Docker.
+  3. Cuando termine de desplegar, usa la URL que te da Render en lugar de la IP.
+  Nota: en el plan gratuito el servicio se duerme tras un rato sin visitas
+  y estado.json vuelve a su valor inicial al redesplegar.
+
+NOTAS
+  - Las pantallas se refrescan solas cada segundo (puede parpadear un instante).
+  - Para añadir colores, edita la lista $colores al principio de control.php.
+  - Control.php no tiene contraseña: no lo expongas a internet sin protegerlo.
