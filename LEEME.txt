@@ -1,37 +1,34 @@
-SALA DE COLORES (PHP, sin JavaScript)
-=====================================
+MEZCLA DE 3 COLORES (PHP, sin JavaScript)
+=========================================
 
-ARCHIVOS
-  control.php   Panel con botones de colores (ábrelo desde móvil u ordenador)
-  pantalla.php  Lo que abre cada proyector (?p=1, ?p=2, ?p=3)
-  estado.json   Guarda el color actual de cada pantalla
-  Dockerfile    Solo hace falta si lo despliegas en Render (opcional)
+CÓMO FUNCIONA
+  Cada cliente elige un color desde su panel. La pantalla de los
+  proyectores muestra SOLO el color resultante de mezclar los elegidos
+  (media de los canales rojo, verde y azul). Si alguien aún no ha elegido,
+  se mezclan los que haya; si no ha elegido nadie, se ve negro.
 
-OPCION A: servidor local (Raspberry Pi o VM con Apache + PHP)
-  1. Copia control.php, pantalla.php y estado.json a la carpeta web,
-     normalmente /var/www/html/  (o la carpeta de tu virtual host).
-  2. Da permisos de escritura sobre la carpeta y el JSON:
-       sudo chown -R www-data:www-data /var/www/html
-       sudo chmod 664 /var/www/html/estado.json
-  3. En cada proyector abre:
-       http://IP-DEL-SERVIDOR/pantalla.php?p=1
-       http://IP-DEL-SERVIDOR/pantalla.php?p=2
-       http://IP-DEL-SERVIDOR/pantalla.php?p=3
-  4. Desde cualquier dispositivo de la red abre:
-       http://IP-DEL-SERVIDOR/control.php
+ARCHIVOS (todos en la MISMA carpeta)
+  index.php      Pantalla de los proyectores (solo el resultado)
+  cliente.php    Panel de cada cliente: ?c=1, ?c=2, ?c=3
+  reiniciar.php  Borra las elecciones y vuelve a negro (para cada ronda)
+  lib.php        Funciones compartidas (no se abre directamente)
+  estado.json    Guarda las elecciones
+  Dockerfile     Solo si despliegas en Render
 
-OPCION B: hosting con PHP (InfinityFree, Hostinger...)
-  Sube control.php, pantalla.php y estado.json a la carpeta pública
-  (htdocs o public_html). No subas el Dockerfile.
+DIRECCIONES (cambia el dominio por el tuyo)
+  Proyectores:  https://TU-APP.onrender.com/
+  Cliente 1:    https://TU-APP.onrender.com/cliente.php?c=1
+  Cliente 2:    https://TU-APP.onrender.com/cliente.php?c=2
+  Cliente 3:    https://TU-APP.onrender.com/cliente.php?c=3
+  Reiniciar:    https://TU-APP.onrender.com/reiniciar.php
 
-OPCION C: GitHub + Render
-  1. Sube TODOS los archivos a un repositorio de GitHub (en la raíz).
-  2. En Render: New > Web Service > elige el repositorio > Environment: Docker.
-  3. Cuando termine de desplegar, usa la URL que te da Render en lugar de la IP.
-  Nota: en el plan gratuito el servicio se duerme tras un rato sin visitas
-  y estado.json vuelve a su valor inicial al redesplegar.
+SERVIDOR LOCAL (Raspberry / VM con Apache + PHP)
+  Copia todo menos Dockerfile y LEEME.txt a /var/www/html/ y da permisos:
+    sudo chown -R www-data:www-data /var/www/html
+    sudo chmod 664 /var/www/html/estado.json
+  Si te sale la página de bienvenida de Apache, borra el index.html.
 
 NOTAS
-  - Las pantallas se refrescan solas cada segundo (puede parpadear un instante).
-  - Para añadir colores, edita la lista $colores al principio de control.php.
-  - Control.php no tiene contraseña: no lo expongas a internet sin protegerlo.
+  - La pantalla se refresca cada segundo (content="1" en index.php).
+  - En Render gratis el estado se pierde si el servicio se duerme o se redespliega.
+  - Ninguna página tiene contraseña: no las expongas a internet sin protegerlas.

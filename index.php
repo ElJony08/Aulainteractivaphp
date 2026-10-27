@@ -1,12 +1,9 @@
 <?php
-// Pantalla de proyector: muestra a pantalla completa el color que toca.
-// Uso: pantalla.php?p=1  (o p=2, p=3)
-$p = $_GET['p'] ?? '1';
-$archivo = __DIR__ . '/estado.json';
-$estado = file_exists($archivo) ? (json_decode(file_get_contents($archivo), true) ?: []) : [];
-$color = $estado[$p] ?? '#000000';
+// Pantalla de los proyectores: muestra SOLO el color resultante de la mezcla.
+require __DIR__ . '/lib.php';
 
-// Evitamos que el navegador guarde la página en caché
+$color = mezclar(leer_estado());
+
 header('Cache-Control: no-store');
 ?>
 <!DOCTYPE html>
@@ -14,7 +11,7 @@ header('Cache-Control: no-store');
 <head>
     <meta charset="utf-8">
     <meta http-equiv="refresh" content="1">
-    <title>Pantalla <?= htmlspecialchars($p) ?></title>
+    <title>Resultado</title>
     <style>
         html, body { margin: 0; height: 100%; background: <?= htmlspecialchars($color) ?>; }
     </style>
