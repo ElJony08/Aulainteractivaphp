@@ -1,34 +1,42 @@
-MEZCLA DE 3 COLORES (PHP, sin JavaScript)
-=========================================
+MEZCLA DE COLORES (PHP, sin JavaScript)
+=======================================
 
 CÓMO FUNCIONA
-  Cada cliente elige un color desde su panel. La pantalla de los
-  proyectores muestra SOLO el color resultante de mezclar los elegidos
-  (media de los canales rojo, verde y azul). Si alguien aún no ha elegido,
-  se mezclan los que haya; si no ha elegido nadie, se ve negro.
+  Cualquier número de clientes (hasta MAX_CLIENTES, 50 por defecto) abre
+  el MISMO enlace, cliente.php, y elige un color. La pantalla de los
+  proyectores muestra SOLO el color resultante: la media de los colores
+  elegidos. Si nadie ha elegido, se ve negro.
+
+  Cada dispositivo se identifica solo con una cookie (dura 1 día), así que
+  no hay que repartir números. Si el cliente vuelve a elegir, cambia su
+  color; no añade otro.
+
+  Botón "Salir": quita el color de ese cliente de la mezcla y borra su
+  cookie. Sin JavaScript no se puede cerrar la pestaña desde la página,
+  así que ese cierre lo hace el usuario. Si alguien cierra la pestaña SIN
+  pulsar Salir, su color sigue contando hasta que se reinicie.
 
 ARCHIVOS (todos en la MISMA carpeta)
   index.php      Pantalla de los proyectores (solo el resultado)
-  cliente.php    Panel de cada cliente: ?c=1, ?c=2, ?c=3
-  reiniciar.php  Borra las elecciones y vuelve a negro (para cada ronda)
+  cliente.php    Panel de los clientes (todos el mismo enlace)
+  reiniciar.php  Borra a todos los clientes y vuelve a negro
   lib.php        Funciones compartidas (no se abre directamente)
-  estado.json    Guarda las elecciones
+  estado.json    Guarda las elecciones: {"id cliente": "#color"}
   Dockerfile     Solo si despliegas en Render
 
 DIRECCIONES (cambia el dominio por el tuyo)
   Proyectores:  https://TU-APP.onrender.com/
-  Cliente 1:    https://TU-APP.onrender.com/cliente.php?c=1
-  Cliente 2:    https://TU-APP.onrender.com/cliente.php?c=2
-  Cliente 3:    https://TU-APP.onrender.com/cliente.php?c=3
+  Clientes:     https://TU-APP.onrender.com/cliente.php
   Reiniciar:    https://TU-APP.onrender.com/reiniciar.php
 
-SERVIDOR LOCAL (Raspberry / VM con Apache + PHP)
+SERVIDOR LOCAL (Raspberry / VM con Apache + PHP 7.3 o superior)
   Copia todo menos Dockerfile y LEEME.txt a /var/www/html/ y da permisos:
     sudo chown -R www-data:www-data /var/www/html
     sudo chmod 664 /var/www/html/estado.json
   Si te sale la página de bienvenida de Apache, borra el index.html.
 
 NOTAS
+  - Para cambiar el máximo de clientes, edita MAX_CLIENTES en lib.php.
   - La pantalla se refresca cada segundo (content="1" en index.php).
   - En Render gratis el estado se pierde si el servicio se duerme o se redespliega.
   - Ninguna página tiene contraseña: no las expongas a internet sin protegerlas.
